@@ -141,16 +141,18 @@ define([], function () {
 
 
 	/* Remove comment nodes and empty or whitespace-only text nodes */
-	dom.clean = function(node) {
-		[].slice.call(node.childNodes).forEach(function(child) {
-			if (child.nodeType === 8 || (child.nodeType === 3 && !/\S/.test(child.nodeValue))) {
-				node.removeChild(child);
-			} else if (child.nodeType === 1) {
-				dom.clean(child);
-			}
-		});
-
-		return node;
+	dom.clean = function(el) {
+		if (typeof el === 'string') {
+			dom.all(el).forEach(dom.clean);
+		} else {
+			[].slice.call(el.childNodes).forEach(function(child) {
+				if (child.nodeType === 8 || (child.nodeType === 3 && !/\S/.test(child.nodeValue))) {
+					el.removeChild(child);
+				} else if (child.nodeType === 1) {
+					dom.clean(child);
+				}
+			});
+		}
 	};
 
 
